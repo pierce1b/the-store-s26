@@ -1,0 +1,8 @@
+A request for a program, the program was about a store
+We need to split the program into parts: ==> analysis (opposite synthesis)
+Let's do a function for each of the menu elements
+Let's do the menu first
+    What happens if the user inputs another number
+    What happens if the user inputs a string
+
+Finished writing a robust menu for our program.
