@@ -7,10 +7,4 @@ Let's do the menu first
 
 Finished writing a robust menu for our program.
 
-Total Sales:    $255.55
-Tax Collected:  $81.11
-Cokes   10
-Donuts  16
-Coffee   0
-Bacon    1
-Milk     3
+How can we sell several products to a customer?

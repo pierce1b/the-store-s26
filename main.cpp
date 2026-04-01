@@ -3,22 +3,26 @@
 #include <iomanip>
 unsigned int Menu();
 
-void Sell(const std::string items[], const float prices[], unsigned int productCount[], size_t size);
-
+void Sell(const std::string items[], const float prices[], unsigned int productCount[],
+    size_t size, float& totalSold, float& totalTax);
+void PrintSummary(const std::string items[], unsigned int productCount[],
+    size_t size, float totalSold, float totalTax);
 
 int main() {
 
     std::string items[] = {"Coke", "Donuts", "Coffee", "Bacon", "Milk"};
     float prices[] = {2.50, 1.00, 5.50, 7, 3.5};
     unsigned int productCount[sizeof(items)/sizeof(items[0])] = {0};
+    float totalSold = 0.0f, totalTax = 0.0f;
+
     unsigned int menuOption;
     do {
         menuOption = Menu();
 
         if (menuOption == 1) {
-            Sell(items, prices, productCount, sizeof(items)/sizeof(items[0]));
+            Sell(items, prices, productCount, sizeof(items)/sizeof(items[0]), totalSold, totalTax);
         }else if (menuOption == 2) {
-            //PrintSummary();
+            PrintSummary(items, productCount, sizeof(items)/sizeof(items[0]), totalSold, totalTax );
         }else if (menuOption == 3) {
             //SaveToFile();
         }else if (menuOption == 4) {
@@ -58,7 +62,9 @@ unsigned int Menu() {
     return menuOption;
 }
 
-void Sell(const std::string items[], const float prices[], unsigned int productCount[], size_t size){
+void Sell(const std::string items[], const float prices[], unsigned int productCount[],
+    size_t size, float& totalSold, float& totalTax){
+
     std::cout << "Select the product: " << std::endl;
     bool found = false;
     std::string item;
@@ -89,9 +95,20 @@ void Sell(const std::string items[], const float prices[], unsigned int productC
     float tax = subTotal * 0.1f;
     float total = subTotal + tax;
     productCount[itemNumber] += count;
-
+    totalSold += total;
+    totalTax += tax;
     std::cout << "Sub Total: " << subTotal << std::endl;
     std::cout << "Tax:       " << tax << std::endl;
     std::cout << "Total:     " << total << std::endl;
+
+}
+void PrintSummary(const std::string items[], unsigned int productCount[],
+    size_t size, float totalSold, float totalTax) {
+
+    for (size_t i=0; i<size; i++) {
+        std::cout << items[i] << " " << productCount[i] << std::endl;
+    }
+    std::cout << "Total Sold: " << totalSold << std::endl;
+    std::cout << "Total Tax: " << totalTax << std::endl;
 
 }
