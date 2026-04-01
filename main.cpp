@@ -3,31 +3,32 @@
 #include <iomanip>
 unsigned int Menu();
 
-void Sell(const std::string items[], const float prices[], size_t size);
+void Sell(const std::string items[], const float prices[], unsigned int productCount[], size_t size);
 
 
 int main() {
 
     std::string items[] = {"Coke", "Donuts", "Coffee", "Bacon", "Milk"};
     float prices[] = {2.50, 1.00, 5.50, 7, 3.5};
+    unsigned int productCount[sizeof(items)/sizeof(items[0])] = {0};
+    unsigned int menuOption;
+    do {
+        menuOption = Menu();
 
-
-    unsigned int menuOption = Menu();
-
-    if (menuOption == 1) {
-        Sell(items, prices, sizeof(items)/sizeof(items[0]));
-    }else if (menuOption == 2) {
-        //PrintSummary();
-    }else if (menuOption == 3) {
-        //SaveToFile();
-    }else if (menuOption == 4) {
-        //LoadFromFile();
-    }else if (menuOption == 5) {
-        std::cout << "Exit" << std::endl;
-    }else {
-        std::cerr << "Impossible" << std::endl;
-    }
-
+        if (menuOption == 1) {
+            Sell(items, prices, productCount, sizeof(items)/sizeof(items[0]));
+        }else if (menuOption == 2) {
+            //PrintSummary();
+        }else if (menuOption == 3) {
+            //SaveToFile();
+        }else if (menuOption == 4) {
+            //LoadFromFile();
+        }else if (menuOption == 5) {
+            std::cout << "Exit" << std::endl;
+        }else {
+            std::cerr << "Impossible" << std::endl;
+        }
+    }while (menuOption != 5);
 }
 
 
@@ -57,7 +58,7 @@ unsigned int Menu() {
     return menuOption;
 }
 
-void Sell(const std::string items[], const float prices[], size_t size){
+void Sell(const std::string items[], const float prices[], unsigned int productCount[], size_t size){
     std::cout << "Select the product: " << std::endl;
     bool found = false;
     std::string item;
@@ -87,6 +88,7 @@ void Sell(const std::string items[], const float prices[], size_t size){
     float subTotal = count * prices[itemNumber];
     float tax = subTotal * 0.1f;
     float total = subTotal + tax;
+    productCount[itemNumber] += count;
 
     std::cout << "Sub Total: " << subTotal << std::endl;
     std::cout << "Tax:       " << tax << std::endl;
