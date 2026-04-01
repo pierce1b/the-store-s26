@@ -1,15 +1,19 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <fstream>
+
 unsigned int Menu();
 
 void Sell(const std::string items[], const float prices[], unsigned int productCount[],
     size_t size, float& totalSold, float& totalTax);
 void PrintSummary(const std::string items[], unsigned int productCount[],
     size_t size, float totalSold, float totalTax);
-
+void SaveToFile(const std::string& filename, const std::string items[], unsigned int productCount[],
+    size_t size, float totalSold, float totalTax);
+void LoadFromFile(const std::string& filename, unsigned int productCount[], size_t size, float& totalSold, float& totalTax);
 int main() {
-
+    // What about if we read this from file?
     std::string items[] = {"Coke", "Donuts", "Coffee", "Bacon", "Milk"};
     float prices[] = {2.50, 1.00, 5.50, 7, 3.5};
     unsigned int productCount[sizeof(items)/sizeof(items[0])] = {0};
@@ -24,9 +28,15 @@ int main() {
         }else if (menuOption == 2) {
             PrintSummary(items, productCount, sizeof(items)/sizeof(items[0]), totalSold, totalTax );
         }else if (menuOption == 3) {
-            //SaveToFile();
+            std::string filename;
+            std::cout << "Store state in file: ";
+            std::cin >> filename;
+            SaveToFile(filename, items, productCount, sizeof(items)/sizeof(items[0]), totalSold, totalTax);
         }else if (menuOption == 4) {
-            //LoadFromFile();
+            std::string filename;
+            std::cout << "Store state in file: ";
+            std::cin >> filename;
+            LoadFromFile(filename, productCount, sizeof(items)/sizeof(items[0]), totalSold, totalTax);
         }else if (menuOption == 5) {
             std::cout << "Exit" << std::endl;
         }else {
@@ -111,4 +121,37 @@ void PrintSummary(const std::string items[], unsigned int productCount[],
     std::cout << "Total Sold: " << totalSold << std::endl;
     std::cout << "Total Tax: " << totalTax << std::endl;
 
+}
+void SaveToFile(const std::string& filename, const std::string items[], unsigned int productCount[],
+    size_t size, float totalSold, float totalTax) {
+
+    std::ofstream output(filename);
+    if (output.fail()) {
+        std::cerr << "Unable to open file " << filename << std::endl;
+        return;
+    }
+    for (size_t i = 0; i < size; ++i) {
+        output << productCount[i] << " " << items[i] << std::endl;
+    }
+    output << totalSold << std::endl << totalTax << std::endl;
+    output.close();
+}
+
+void LoadFromFile(const std::string& filename, unsigned int productCount[], size_t size, float& totalSold, float& totalTax) {
+
+    std::ifstream input(filename);
+    if (input.fail()) {
+        std::cerr << "Unable to open file " << filename << std::endl;
+        return;
+    }
+    std::string dummy;
+    unsigned int count;
+    for (size_t i=0; i<size;i++) {
+        input >> count;
+        productCount[i] = count;
+        input >> dummy;
+    }
+    input >> totalSold;
+    input >> totalTax;
+    input.close();
 }

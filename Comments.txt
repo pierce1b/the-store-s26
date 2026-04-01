@@ -8,3 +8,12 @@ Let's do the menu first
 Finished writing a robust menu for our program.
 
 How can we sell several products to a customer?
+
+
+
+
+
+
+
+
+
