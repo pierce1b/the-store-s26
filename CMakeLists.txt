@@ -3,4 +3,6 @@ project(the_store_s26)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(the_store_s26 main.cpp)
+add_executable(the_store_s26 main.cpp
+        store.cpp
+        store.h)
