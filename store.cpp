@@ -37,39 +37,53 @@ unsigned int Menu() {
 
 void Sell(const std::string items[], const float prices[], unsigned int productCount[],
     size_t size, float& totalSold, float& totalTax){
+    bool finish = false;
+    float tax, total;
+    float subTotal = 0;
+    do {
+        std::cout << "Select the product: " << std::endl;
+        bool found = false;
+        std::string item;
+        unsigned int itemNumber;
+        while (!found) {
+            for (size_t i = 0; i < size; i++) {
+                std::cout << std::left << std::setw(10) << items[i]
+                          << std::setprecision(2) << std::fixed << std::setw(7) << prices[i] << std::endl;
+            }
+            std::getline(std::cin, item); // '\n'
+            itemNumber = -1;
+            if (item == "exit") {
+                finish = true;
+                break;
+            }
 
-    std::cout << "Select the product: " << std::endl;
-    bool found = false;
-    std::string item;
-    unsigned int itemNumber;
-    while (!found) {
-        for (size_t i = 0; i < size; i++) {
-            std::cout << std::left << std::setw(10) << items[i]
-                      << std::setprecision(2) << std::fixed << std::setw(7) << prices[i] << std::endl;
-        }
-        std::getline(std::cin, item);
-        itemNumber = -1;
-        for (size_t i = 0; i < size; i++) {
-            if (item == items[i]) {
-                itemNumber = i;
-                found = true;
+            for (size_t i = 0; i < size; i++) {
+                if (item == items[i]) {
+                    itemNumber = i;
+                    found = true;
+                }
+            }
+            if (!found) {
+                std::cerr << "Select a product from the list" << std::endl;
             }
         }
-        if (!found) {
-            std::cerr << "Select a product from the list" << std::endl;
-        }
-    }
-    unsigned int count;
-    std::cout << "How many: ";
-    std::cin >> count;
+        if (!finish) {
+            unsigned int count;
+            std::cout << "How many: ";
+            std::cin >> count;
+            std::cin.ignore();
 
-    std::cout << "You want " << item << " " << count << " of them" << std::endl;
-    float subTotal = count * prices[itemNumber];
-    float tax = subTotal * 0.1f;
-    float total = subTotal + tax;
-    productCount[itemNumber] += count;
+            std::cout << "You want " << item << " " << count << " of them" << std::endl;
+            subTotal += count * prices[itemNumber];
+            productCount[itemNumber] += count;
+        }
+
+    }while (!finish);
+    tax = subTotal * 0.1f;
+    total = subTotal + tax;
     totalSold += total;
     totalTax += tax;
+
     std::cout << "Sub Total: " << subTotal << std::endl;
     std::cout << "Tax:       " << tax << std::endl;
     std::cout << "Total:     " << total << std::endl;
