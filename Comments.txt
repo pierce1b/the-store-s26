@@ -10,7 +10,8 @@ Finished writing a robust menu for our program.
 How can we sell several products to a customer?
 
 I want the user to be able to buy more than 1 item, this way:
-Coke 3, Milk 4, Donuts 10
+3 Coke, 3 Milk, 1 Donut
+
 
 
 improve the program: const unsigned int SIZE =

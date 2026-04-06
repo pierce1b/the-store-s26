@@ -8,6 +8,10 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
+
+int Search(const std::string data[], size_t size, const std::string& key);
+
 
 unsigned int Menu() {
     unsigned int menuOption;
@@ -40,45 +44,29 @@ void Sell(const std::string items[], const float prices[], unsigned int productC
     bool finish = false;
     float tax, total;
     float subTotal = 0;
-    do {
-        std::cout << "Select the product: " << std::endl;
-        bool found = false;
-        std::string item;
-        unsigned int itemNumber;
-        while (!found) {
-            for (size_t i = 0; i < size; i++) {
-                std::cout << std::left << std::setw(10) << items[i]
-                          << std::setprecision(2) << std::fixed << std::setw(7) << prices[i] << std::endl;
-            }
-            std::getline(std::cin, item); // '\n'
-            itemNumber = -1;
-            if (item == "exit") {
-                finish = true;
-                break;
-            }
-
-            for (size_t i = 0; i < size; i++) {
-                if (item == items[i]) {
-                    itemNumber = i;
-                    found = true;
-                }
-            }
-            if (!found) {
-                std::cerr << "Select a product from the list" << std::endl;
-            }
+    for (size_t i = 0; i < size; i++) {
+        std::cout << std::left << std::setw(10) << items[i]
+                  << std::setprecision(2) << std::fixed << std::setw(7) << prices[i] << std::endl;
+    }
+    std::cout << "Your order is my command: ";
+    std::string order;
+    std::getline(std::cin, order);
+    // 3 Coke, 2 Milk, 5 Chocolates
+    std::stringstream ssin(order);
+    std::string itemAndCount, item;
+    size_t count;
+    while (getline(ssin, itemAndCount, ',')) {
+        std::stringstream itemCountSS(itemAndCount);
+        itemCountSS >> count;
+        itemCountSS >> item;
+        int index = Search(items, size, item);
+        if (index != -1) {
+            subTotal += prices[index] * count;
+            productCount[index] += count;
+        }else {
+            std::cerr << item << " not found" << std::endl;
         }
-        if (!finish) {
-            unsigned int count;
-            std::cout << "How many: ";
-            std::cin >> count;
-            std::cin.ignore();
-
-            std::cout << "You want " << item << " " << count << " of them" << std::endl;
-            subTotal += count * prices[itemNumber];
-            productCount[itemNumber] += count;
-        }
-
-    }while (!finish);
+    }
     tax = subTotal * 0.1f;
     total = subTotal + tax;
     totalSold += total;
@@ -88,6 +76,46 @@ void Sell(const std::string items[], const float prices[], unsigned int productC
     std::cout << "Tax:       " << tax << std::endl;
     std::cout << "Total:     " << total << std::endl;
 
+
+
+    //     std::cout << "Select the product: " << std::endl;
+    //     bool found = false;
+    //     std::string item;
+    //     unsigned int itemNumber;
+    //     while (!found) {
+    //         for (size_t i = 0; i < size; i++) {
+    //             std::cout << std::left << std::setw(10) << items[i]
+    //                       << std::setprecision(2) << std::fixed << std::setw(7) << prices[i] << std::endl;
+    //         }
+    //         std::getline(std::cin, item); // '\n'
+    //         itemNumber = -1;
+    //         if (item == "exit") {
+    //             finish = true;
+    //             break;
+    //         }
+    //
+    //         for (size_t i = 0; i < size; i++) {
+    //             if (item == items[i]) {
+    //                 itemNumber = i;
+    //                 found = true;
+    //             }
+    //         }
+    //         if (!found) {
+    //             std::cerr << "Select a product from the list" << std::endl;
+    //         }
+    //     }
+    //     if (!finish) {
+    //         unsigned int count;
+    //         std::cout << "How many: ";
+    //         std::cin >> count;
+    //         std::cin.ignore();
+    //
+    //         std::cout << "You want " << item << " " << count << " of them" << std::endl;
+    //         subTotal += count * prices[itemNumber];
+    //         productCount[itemNumber] += count;
+    //     }
+    //
+    // }while (!finish);
 }
 void PrintSummary(const std::string items[], unsigned int productCount[],
     size_t size, float totalSold, float totalTax) {
@@ -131,4 +159,11 @@ void LoadFromFile(const std::string& filename, unsigned int productCount[], size
     input >> totalSold;
     input >> totalTax;
     input.close();
+}
+int Search(const std::string data[], size_t size, const std::string& key) {
+    for (size_t i=0; i<size; i++) {
+        if (data[i] == key)
+            return i;
+    }
+    return -1;
 }
